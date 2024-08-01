@@ -9,6 +9,7 @@ console.log('**************************************************');
 const nextConfig = {
   output: outputType,
   trailingSlash: true,
+  basePath: process.env.NEXT_PUBLIC_PROMPTFOO_URL_PREFIX,
   webpack: (config, { isServer }) => {
     config.externals.push({
       'utf-8-validate': 'commonjs utf-8-validate',
@@ -33,6 +34,7 @@ const nextConfig = {
   },
   env: {
     PROMPTFOO_VERSION: require('../../../package.json').version,
+    PROMPTFOO_BASE_URL: process.env.NEXT_PUBLIC_PROMPTFOO_URL_PREFIX
   },
 };
 
