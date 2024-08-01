@@ -213,7 +213,7 @@ export async function startServer(
 
   app.get('/api/config', (req, res) => {
     res.json({
-      apiBaseUrl: apiBaseUrl || '',
+      apiBaseUrl: apiBaseUrl,
     });
   });
 

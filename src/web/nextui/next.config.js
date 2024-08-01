@@ -9,6 +9,7 @@ console.log('**************************************************');
 const nextConfig = {
   output: outputType,
   trailingSlash: true,
+  basePath: process.env.NEXT_PUBLIC_PROMPTFOO_URL_PREFIX,
   webpack: (config, { isServer }) => {
     config.externals.push({
       'utf-8-validate': 'commonjs utf-8-validate',
@@ -36,6 +37,7 @@ const nextConfig = {
     NEXT_PUBLIC_SUPABASE_URL:
       process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.promptfoo.dev',
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'abc123',
+    PROMPTFOO_BASE_URL: process.env.NEXT_PUBLIC_PROMPTFOO_URL_PREFIX
   },
 };
 

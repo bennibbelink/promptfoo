@@ -18,6 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import TextField from '@mui/material/TextField';
 import Link from 'next/link';
+import { getApiBaseUrl } from '@/api';
 
 export default function Cols() {
   const [cols, setCols] = useState<StandaloneEval[]>([]);
@@ -32,7 +33,7 @@ export default function Cols() {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(`/api/progress`);
+      const response = await fetch(`${await getApiBaseUrl()}/api/progress`);
       const data = await response.json();
       if (data && data.data) {
         setCols(data.data);

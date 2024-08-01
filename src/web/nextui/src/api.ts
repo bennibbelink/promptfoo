@@ -2,6 +2,7 @@ let apiBaseUrl: string | undefined;
 let fetchPromise: Promise<string | undefined> | undefined;
 
 export async function getApiBaseUrl(): Promise<string> {
+  apiBaseUrl = process.env.PROMPTFOO_BASE_URL;
   if (!apiBaseUrl) {
     if (!fetchPromise) {
       fetchPromise = fetch('/api/config')
