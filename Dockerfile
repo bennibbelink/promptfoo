@@ -2,7 +2,7 @@
 
 # ---- Build ----
 ARG BUILDPLATFORM=linux/amd64
-FROM --platform=${BUILDPLATFORM} node:20-alpine AS builder
+FROM --platform=${BUILDPLATFORM} node:20-bullseye-slim AS builder
 
 ARG NEXT_PUBLIC_PROMPTFOO_BASE_URL
 ENV NEXT_PUBLIC_PROMPTFOO_BASE_URL=${NEXT_PUBLIC_PROMPTFOO_BASE_URL}
@@ -27,7 +27,7 @@ WORKDIR /app
 COPY . .
 
 # Necessary for node-gyp deps
-RUN apk update && apk add --no-cache python3 build-base
+RUN apt update -y && apt install -y python3 build-essential
 
 # Envars are read in from src/web/nextui/.env.production
 RUN echo "*** Building with env vars from .env.production"
@@ -40,7 +40,7 @@ RUN npm prune --omit=dev
 
 # ---- Final Stage ----
 ARG TARGETPLATFORM=linux/amd64
-FROM --platform=${TARGETPLATFORM} node:20-alpine
+FROM --platform=${TARGETPLATFORM} node:20-bullseye-slim
 
 LABEL org.opencontainers.image.source="https://github.com/promptfoo/promptfoo"
 LABEL org.opencontainers.image.description="promptfoo is a tool for testing evaluating and red-teaming LLM apps."
@@ -58,8 +58,8 @@ COPY --from=builder /app/drizzle ./src/web/nextui/.next/server/drizzle
 RUN mkdir -p /root/.promptfoo/output
 
 # Permissions
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+RUN groupadd -g 1001 nodejs
+RUN useradd -m -u 1001 -g nodejs -s /bin/sh nextjs
 RUN mkdir -p /root/.promptfoo/output
 RUN chown -R nextjs:nodejs /app /root/.promptfoo
 
@@ -68,7 +68,7 @@ RUN mkdir -p /app/src/web/nextui
 RUN chown nextjs:nodejs /app/src/web/nextui
 
 # Install curl for the healthcheck
-RUN apk add --no-cache curl sqlite-dev
+RUN apt update -y && apt install -y curl sqlite3 libsqlite3-dev
 
 # Create a script to write environment variables to .env file
 RUN echo -e '#!/bin/sh\n\
